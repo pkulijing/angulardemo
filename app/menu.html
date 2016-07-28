@@ -107,7 +107,7 @@
        this.dishes = dishes;
        this.tab = 1;
        this.isSelected = function(checkTab) {
-         return (this.tab = checkTab);
+         return (this.tab == checkTab);
        }
        this.filtText = "";
        this.select = function(setTab) {
