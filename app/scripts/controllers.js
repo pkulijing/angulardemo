@@ -94,7 +94,7 @@ angular.module('confusionApp')
                 //Step 4: reset your form to pristine
 
                 //Step 5: reset your JavaScript object that holds your comment
-            }
+            };
         }])
 
 ;

@@ -160,6 +160,6 @@ angular.module('confusionApp').service('menuFactory', function(){
                      }                                                          ]
               }
               ];
-      this.getDishes = function() { return dishes; }
-      this.getDish = function(index) { return dishes[index]; }
+      this.getDishes = function() { return dishes; };
+      this.getDish = function(index) { return dishes[index]; };
 });
