@@ -11,18 +11,14 @@ angular.module('confusionApp')
             $scope.showMenu = false;
             $scope.message = "Loading...";
 
-            $scope.dishes= [];
-
-            menuFactory.getDishes()
-            .then(
-              function(response) {
-                $scope.dishes = response.data;
-                $scope.showMenu = true;
-              },
-              function(response) {
-                $scope.message = "Error: " + response.status + " " + response.statusText;
-              }
-            );
+            menuFactory.getDishes().query(
+                function(response) {
+                    $scope.dishes = response;
+                    $scope.showMenu = true;
+                },
+                function(response) {
+                    $scope.message = "Error: "+response.status + " " + response.statusText;
+                });
 
 
             $scope.select = function(setTab) {
@@ -83,26 +79,21 @@ angular.module('confusionApp')
         }])
 
         .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
-
-            var dish = {};
             $scope.showDish = false;
-            $scope.message = "Loading ...";
-            menuFactory.getDish(parseInt($stateParams.id,10))
-            .then(
-              function(response){
-                  $scope.dish = response.data;
-                  $scope.showDish=true;
-                },
-              function(response) {
-                  $scope.message = "Error: "+response.status + " " + response.statusText;
-                }
-              );
+            $scope.message="Loading ...";
+            menuFactory.getDishes().get({id:parseInt($stateParams.id,10)})
+                .$promise.then(
+                                function(response){
+                                    $scope.dish = response;
+                                    $scope.showDish = true;
+                                },
+                                function(response) {
+                                    $scope.message = "Error: "+response.status + " " + response.statusText;
+                                }
+                );
+              }])
 
-            $scope.dish = dish;
-
-        }])
-
-        .controller('DishCommentController', ['$scope', function($scope) {
+        .controller('DishCommentController', ['$scope','menuFactory', function($scope,menuFactory) {
 
             $scope.mycomment = {rating:5, comment:"", author:"", date:""};
 
@@ -113,8 +104,9 @@ angular.module('confusionApp')
 
                 $scope.dish.comments.push($scope.mycomment);
 
-                $scope.commentForm.$setPristine();
+                menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
 
+                $scope.commentform.$setPristine();
                 $scope.mycomment = {rating:5, comment:"", author:"", date:""};
             };
         }])
@@ -124,20 +116,18 @@ angular.module('confusionApp')
           $scope.promotion = menuFactory.getPromotion(0);
           $scope.chef = corporateFactory.getLeader(3);
 
-          $scope.trending = {};
           $scope.showTrending = false;
           $scope.message="Loading ...";
-
-          menuFactory.getDish(0)
-          .then(
-              function(response){
-                  $scope.trending = response.data;
-                  $scope.showTrending = true;
-              },
-              function(response) {
-                  $scope.message = "Error: "+response.status + " " + response.statusText;
-              }
-          );
+          menuFactory.getDishes().get({id:0})
+                        .$promise.then(
+                            function(response){
+                                $scope.trending = response;
+                                $scope.showTrending = true;
+                            },
+                            function(response) {
+                                $scope.message = "Error: "+response.status + " " + response.statusText;
+                            }
+                        );
         }])
 
         .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory) {

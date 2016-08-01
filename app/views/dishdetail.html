@@ -38,12 +38,12 @@
                 <ul ng-show="commentform.$valid">
                   <li class="list-unstyled">
                     <blockquote>
-                      {{newcomment.rating}} <span class="glyphicon glyphicon-star"></span>
+                      {{mycomment.rating}} <span class="glyphicon glyphicon-star"></span>
                       <p>
-                        {{newcomment.comment}}
+                        {{mycomment.comment}}
                       </p>
                       <footer>
-                        {{newcomment.author}} {{newcomment.date|date}}
+                        {{mycomment.author}} {{mycomment.date|date}}
                       </footer>
                     </blockquote>
                   </li>
@@ -51,24 +51,24 @@
                 <div class="form-group" ng-class="{'has-error': commentform.name.$error.required && !commentform.name.$pristine}">
                   <label class="control-label col-xs-2" for="name">Your Name</label>
                   <div class="col-xs-10">
-                    <input ng-model="newcomment.author" class="form-control" id="name" name="name" type="text" placeholder="Enter Your Name" required/>
+                    <input ng-model="mycomment.author" class="form-control" id="name" name="name" type="text" placeholder="Enter Your Name" required/>
                     <span ng-show="commentform.name.$error.required && !commentform.name.$pristine" class="help-block">Your name is required.</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-xs-2" for="numstars">Number of Stars</label>
                   <div class="col-xs-10">
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="1"/>1</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="2"/>2</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="3"/>3</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="4"/>4</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="5" checked/>5</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=1 />1</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=2 />2</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=3 />3</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=4 />4</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=5 checked/>5</label>
                   </div>
                 </div>
                 <div class="form-group" ng-class="{'has-error': commentform.yourcomments.$error.required && !commentform.yourcomments.$pristine}">
                   <label class="control-label col-xs-2" for="yourcomments">Your Comments</label>
                   <div class="col-xs-10">
-                    <textarea rows=12 class="form-control" name="yourcomments" id="yourcomments" ng-model="newcomment.comment" required></textarea>
+                    <textarea rows=12 class="form-control" name="yourcomments" id="yourcomments" ng-model="mycomment.comment" required></textarea>
                     <span ng-show="commentform.yourcomments.$error.required && !commentform.yourcomments.$pristine" class="help-block">Your comments are required.</span>
                   </div>
                 </div>
