@@ -8,7 +8,21 @@ angular.module('confusionApp')
             $scope.filtText = '';
             $scope.showDetails = false;
 
-            $scope.dishes= menuFactory.getDishes();
+            $scope.showMenu = false;
+            $scope.message = "Loading...";
+
+            $scope.dishes= [];
+
+            menuFactory.getDishes()
+            .then(
+              function(response) {
+                $scope.dishes = response.data;
+                $scope.showMenu = true;
+              },
+              function(response) {
+                $scope.message = "Error: " + response.status + " " + response.statusText;
+              }
+            );
 
 
             $scope.select = function(setTab) {
@@ -70,7 +84,19 @@ angular.module('confusionApp')
 
         .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
 
-            var dish= menuFactory.getDish(parseInt($stateParams.id,10));
+            var dish = {};
+            $scope.showDish = false;
+            $scope.message = "Loading ...";
+            menuFactory.getDish(parseInt($stateParams.id,10))
+            .then(
+              function(response){
+                  $scope.dish = response.data;
+                  $scope.showDish=true;
+                },
+              function(response) {
+                  $scope.message = "Error: "+response.status + " " + response.statusText;
+                }
+              );
 
             $scope.dish = dish;
 
@@ -90,14 +116,28 @@ angular.module('confusionApp')
                 $scope.commentForm.$setPristine();
 
                 $scope.mycomment = {rating:5, comment:"", author:"", date:""};
-            }
+            };
         }])
 
         // implement the IndexController and About Controller here
         .controller('IndexController', ['$scope', 'menuFactory', 'corporateFactory', function($scope, menuFactory, corporateFactory) {
-          $scope.trending = menuFactory.getDish(0);
           $scope.promotion = menuFactory.getPromotion(0);
           $scope.chef = corporateFactory.getLeader(3);
+
+          $scope.trending = {};
+          $scope.showTrending = false;
+          $scope.message="Loading ...";
+
+          menuFactory.getDish(0)
+          .then(
+              function(response){
+                  $scope.trending = response.data;
+                  $scope.showTrending = true;
+              },
+              function(response) {
+                  $scope.message = "Error: "+response.status + " " + response.statusText;
+              }
+          );
         }])
 
         .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory) {
