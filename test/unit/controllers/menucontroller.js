@@ -2,12 +2,14 @@ describe('Controller: MenuController', function () {
 
   // load the controller's module
   beforeEach(module('confusionApp'));
+  beforeEach(module('stateMock'));
 
   var MenuController, scope, $httpBackend;
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, _$httpBackend_,  $rootScope, menuFactory) {
+  beforeEach(inject(function ($state, $controller, _$httpBackend_,  $rootScope, menuFactory) {
 
           // place here mocked dependencies
+      state = $state;
       $httpBackend = _$httpBackend_;
 
       $httpBackend.expectGET("http://localhost:3000/dishes").respond([
@@ -33,41 +35,43 @@ describe('Controller: MenuController', function () {
       }
       ]);
 
-      scope = $rootScope.$new();
-      MenuController = $controller('MenuController', {
-        $scope: scope, menuFactory: menuFactory
-      });
-      $httpBackend.flush();
-  }));
-  it('should have showDetails as false', function () {
+    scope = $rootScope.$new();
+    MenuController = $controller('MenuController', {
+      $scope: scope, menuFactory: menuFactory
+    });
+            $httpBackend.flush();
+    }));
+    it('should have showDetails as false', function () {
 
-   expect(scope.showDetails).toBeFalsy();
+       expect(scope.showDetails).toBeFalsy();
 
-   });
+     });
 
-   it('should create "dishes" with 2 dishes fetched from xhr', function(){
+     it('should create "dishes" with 2 dishes fetched from xhr', function(){
 
-       expect(scope.showMenu).toBeTruthy();
-       expect(scope.dishes).toBeDefined();
-       expect(scope.dishes.length).toBe(2);
+         expect(scope.showMenu).toBeTruthy();
+         expect(scope.dishes).toBeDefined();
+         expect(scope.dishes.length).toBe(2);
 
-   });
+     });
 
-   it('should have the correct data order in the dishes', function() {
+     it('should have the correct data order in the dishes', function() {
 
-       expect(scope.dishes[0].name).toBe("Uthapizza");
-       expect(scope.dishes[1].label).toBe("New");
+         expect(scope.dishes[0].name).toBe("Uthapizza");
+         expect(scope.dishes[1].label).toBe("New");
 
-   });
+     });
 
-   it('should change the tab selected based on tab clicked', function(){
+     it('should change the tab selected based on tab clicked', function(){
 
-       expect(scope.tab).toEqual(1);
+         expect(scope.tab).toEqual(1);
 
-       scope.select(3);
+         scope.select(3);
 
-       expect(scope.tab).toEqual(3);
-       expect(scope.filtText).toEqual('mains');
+         expect(scope.tab).toEqual(3);
+         expect(scope.filtText).toEqual('mains');
 
-   });
+     });
+
+
 });
