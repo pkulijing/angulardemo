@@ -110,6 +110,14 @@
                             <button type="submit" class="btn btn-primary" ng-disabled="feedbackForm.$invalid">Send Feedback</button>
                         </div>
                     </div>
+                    <div class="form-group" ng-if="showMessage">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                          <button type="button" class="close" aria-label="close" ng-click="resetWarning()"><span aria-hidden="true">&times;</span></button>
+                          {{message}}
+                        </div>
+                      </div>
+                    </div>
                 </form>
             </div>
             <div class="col-xs-12 col-sm-3">

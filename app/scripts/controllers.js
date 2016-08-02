@@ -20,7 +20,6 @@ angular.module('confusionApp')
                     $scope.message = "Error: "+response.status + " " + response.statusText;
                 });
 
-
             $scope.select = function(setTab) {
                 $scope.tab = setTab;
 
@@ -49,7 +48,7 @@ angular.module('confusionApp')
 
         .controller('ContactController', ['$scope', function($scope) {
 
-            $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
+            $scope.feedback = {mychannel:"", firstname:"", lastname:"", agree:false, email:"" };
 
             var channels = [{value:"tel", label:"Tel."}, {value:"Email",label:"Email"}];
 
@@ -58,24 +57,38 @@ angular.module('confusionApp')
 
         }])
 
-        .controller('FeedbackController', ['$scope', function($scope) {
+        .controller('FeedbackController', ['$scope', 'feedbackFactory', function($scope, feedbackFactory) {
+
+            $scope.showMessage = false;
 
             $scope.sendFeedback = function() {
 
+                $scope.showMessage = false;
                 console.log($scope.feedback);
 
                 if ($scope.feedback.agree && ($scope.feedback.mychannel == "")) {
                     $scope.invalidChannelSelection = true;
                     console.log('incorrect');
-                }
-                else {
-                    $scope.invalidChannelSelection = false;
-                    $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
-                    $scope.feedback.mychannel="";
-                    $scope.feedbackForm.$setPristine();
-                    console.log($scope.feedback);
+                } else {
+                    feedbackFactory.getFeedbacks().save($scope.feedback)
+                    .$promise.then(
+                      function(response) {
+                        $scope.invalidChannelSelection = false;
+                        $scope.feedback = {mychannel:"", firstname:"", lastname:"", agree:false, email:"" };
+                        $scope.feedback.mychannel="";
+                        $scope.feedbackForm.$setPristine();
+                      },
+                      function(response) {
+                        $scope.message = "Failed to submit feedback due to connection problem.";
+                        $scope.showMessage = true;
+                      }
+                    );
                 }
             };
+
+            $scope.resetWarning = function() {
+              $scope.showMessage = false;
+            }
         }])
 
         .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
@@ -113,11 +126,12 @@ angular.module('confusionApp')
 
         // implement the IndexController and About Controller here
         .controller('IndexController', ['$scope', 'menuFactory', 'corporateFactory', function($scope, menuFactory, corporateFactory) {
-          $scope.promotion = menuFactory.getPromotion(0);
-          $scope.chef = corporateFactory.getLeader(3);
-
           $scope.showTrending = false;
+          $scope.showPromotion = false;
+          $scope.showChef = false;
           $scope.message="Loading ...";
+          $scope.messagePromotion="Loading ...";
+          $scope.messageChef="Loading ...";
           menuFactory.getDishes().get({id:0})
                         .$promise.then(
                             function(response){
@@ -125,13 +139,45 @@ angular.module('confusionApp')
                                 $scope.showTrending = true;
                             },
                             function(response) {
-                                $scope.message = "Error: "+response.status + " " + response.statusText;
+                                $scope.message = "Error: " + response.status + " " + response.statusText;
                             }
                         );
+
+          menuFactory.getPromotions().get({id:0})
+                      .$promise.then(
+                        function(response) {
+                          $scope.promotion = response;
+                          $scope.showPromotion = true;
+                        },
+                        function(response) {
+                          $scope.messagePromotion = "Error: " + response.status + " " + response.statusText;
+                        }
+                      );
+          corporateFactory.getLeaders().get({id:3})
+                    .$promise.then(
+                      function(response) {
+                        $scope.chef = response;
+                        $scope.showChef = true;
+                      },
+                      function(response) {
+                        $scope.messageChef = "Error: " + response.status + " " + response.statusText;
+                      }
+                    )
         }])
 
         .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory) {
-          $scope.leaders = corporateFactory.getLeaders();
+          $scope.showLeaders = false;
+          $scope.message = "Loading";
+          corporateFactory.getLeaders().query()
+                .$promise.then(
+                  function(response) {
+                    $scope.leaders = response;
+                    $scope.showLeaders = true;
+                  },
+                  function(response) {
+                    $scope.message = "Error: " + response.status +  " "  + response.statusText;
+                  }
+                );
         }])
 
 ;
