@@ -1,34 +1,12 @@
-<!DOCTYPE html>
-<!-- saved from url=(0321)https://d3c33hcgiwev3.cloudfront.net/_49c417f481d797cf78b2985d8bded22f_dishdetail.html?Expires=1469836800&Signature=Y9eHO6wnyxEVnN47aknXKg30hxg0RuVpIU4SmKkNy6q~Y8OiumvF1-aehJDxb9PBVUWrf5ancLgHf9BJ~tPUTq79eotS5~i0rYmurnCAdENw1mWSYnUk5qENT~3SMwfY0GX~qkrws0-f8TyJhqg8QtPIk-~ODtlYPUXL8U9KG7Q_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A -->
-<html lang="en" ng-app="confusionApp">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head
-         content must come *after* these tags -->
-    <title>Ristorante Con Fusion: Menu</title>
-        <!-- Bootstrap -->
-    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="styles/bootstrap-social.css" rel="stylesheet">
-    <link href="styles/mystyles.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-
-<body>
-
     <div class="container">
         <div class="row row-content" ng-controller="DishDetailController">
-            <div class="media col-xs-12">
-                  <div class="media-left media-middle">
+           <div class="col-xs-12" ng-if="!showDish">
+               <h3>{{message}}</h3>
+           </div>
+           <div class="col-xs-12" ng-if="showDish">
+            <div class="media">
+              <button class="btn btn-xs btn-primary pull-right" type="button" ui-sref="app.menu">Back to Menu</button>
+              <div class="media-left media-middle">
                     <a href="#">
                       <img class="media-object img-thumbnail" ng-src="{{dish.image}}" alt="{{dish.name}}"/>
                     </a>
@@ -39,6 +17,7 @@
                     <span class="badge">{{dish.price | currency}}</span>
                     <p>{{dish.description}}</p>
                   </div>
+                </div>
             </div>
             <div class="col-xs-9 col-xs-offset-1">
               <h4>Customer Comments <small>Sort by: </small><input type="text" ng-model="howtoorder" /></h4>
@@ -59,12 +38,12 @@
                 <ul ng-show="commentform.$valid">
                   <li class="list-unstyled">
                     <blockquote>
-                      {{newcomment.rating}} <span class="glyphicon glyphicon-star"></span>
+                      {{mycomment.rating}} <span class="glyphicon glyphicon-star"></span>
                       <p>
-                        {{newcomment.comment}}
+                        {{mycomment.comment}}
                       </p>
                       <footer>
-                        {{newcomment.author}} {{newcomment.date|date}}
+                        {{mycomment.author}} {{mycomment.date|date}}
                       </footer>
                     </blockquote>
                   </li>
@@ -72,24 +51,24 @@
                 <div class="form-group" ng-class="{'has-error': commentform.name.$error.required && !commentform.name.$pristine}">
                   <label class="control-label col-xs-2" for="name">Your Name</label>
                   <div class="col-xs-10">
-                    <input ng-model="newcomment.author" class="form-control" id="name" name="name" type="text" placeholder="Enter Your Name" required/>
+                    <input ng-model="mycomment.author" class="form-control" id="name" name="name" type="text" placeholder="Enter Your Name" required/>
                     <span ng-show="commentform.name.$error.required && !commentform.name.$pristine" class="help-block">Your name is required.</span>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-xs-2" for="numstars">Number of Stars</label>
                   <div class="col-xs-10">
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="1"/>1</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="2"/>2</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="3"/>3</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="4"/>4</label>
-                    <label class="radio-inline"><input type="radio" ng-model="newcomment.rating" name="numstars" value="5" checked/>5</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=1 />1</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=2 />2</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=3 />3</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=4 />4</label>
+                    <label class="radio-inline"><input type="radio" ng-model="mycomment.rating" name="numstars" ng-value=5 checked/>5</label>
                   </div>
                 </div>
                 <div class="form-group" ng-class="{'has-error': commentform.yourcomments.$error.required && !commentform.yourcomments.$pristine}">
                   <label class="control-label col-xs-2" for="yourcomments">Your Comments</label>
                   <div class="col-xs-10">
-                    <textarea rows=12 class="form-control" name="yourcomments" id="yourcomments" ng-model="newcomment.comment" required></textarea>
+                    <textarea rows=12 class="form-control" name="yourcomments" id="yourcomments" ng-model="mycomment.comment" required></textarea>
                     <span ng-show="commentform.yourcomments.$error.required && !commentform.yourcomments.$pristine" class="help-block">Your comments are required.</span>
                   </div>
                 </div>
@@ -103,11 +82,3 @@
         </div>
 
     </div>
-
-    <script src="../bower_components/angular/angular.min.js"></script>
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers.js"></script>
-    <script src="scripts/services.js"></script>
-
-
-</body></html>
